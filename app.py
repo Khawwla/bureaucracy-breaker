@@ -107,13 +107,18 @@ if api_key:
                         )
                         time.sleep(3) 
 
-                        # THE "LAWYER" PROMPT
+                        # THE "PROFESSIONAL ADVOCATE" PROMPT
                         prompt = """
-                        You are an aggressive, high-level bureaucratic advocate. 
-                        Analyze this document.
-                        1. Summarize the document in plain English.
-                        2. Identify 3 specific "Gotcha" clauses that are dangerous.
-                        3. Identify 1 "Loophole" or exit strategy for the user.
+                        You are a senior expert in contract law and bureaucratic administration. 
+                        Your goal is to protect the user's interests by ensuring they fully understand their rights and obligations.
+                        
+                        Analyze this document strictly based on its text:
+                        
+                        1. **Executive Summary:** Explain the document's purpose and binding nature in simple, clear English.
+                        2. **Risk Assessment:** Identify 3 specific clauses that impose strict penalties, fees, or unusual liabilities. Quote the exact text.
+                        3. **Strategic Options:** Identify 1 legitimate exit strategy, negotiation lever, or consumer protection right that allows the user to resolve the issue or terminate the agreement favorably.
+                        
+                        Ensure all advice is ethical, compliant with the law, and focused on using the document's own terms to the user's advantage.
                         """
                         
                         # Generate with GEMINI 3
@@ -139,7 +144,13 @@ if api_key:
         st.info("✅ Case Active. Context Loaded.")
         
         # Display Chat History
-        for msg in st.session_state['history']:
+        # We use 'enumerate' to skip the first message (the hidden prompt)
+        for i, msg in enumerate(st.session_state['history']):
+            
+            # HIDDEN PROMPT LOGIC:
+            if i == 0:
+                continue 
+
             role = "🤖 Agent" if msg['role'] == "model" else "👤 You"
             with st.chat_message(msg['role']):
                 st.markdown(msg['parts'][0]['text'])
