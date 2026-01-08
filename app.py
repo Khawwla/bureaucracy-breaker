@@ -37,6 +37,14 @@ with col2:
     st.caption(f"Powered by **Gemini 3 Flash Preview** | Status: ONLINE")
 
 # 1. SETUP API
+# Try to get key from Streamlit Secrets (for the judges)
+if "GEMINI_API_KEY" in st.secrets:
+    api_key = st.secrets["GEMINI_API_KEY"]
+else:
+    # If not in secrets, ask the user (for local testing)
+    api_key = st.sidebar.text_input("Enter Gemini API Key", type="password")
+    
+# 1. SETUP API
 api_key = st.sidebar.text_input("Enter Gemini API Key", type="password")
 
 # CONFIGURATION FOR GEMINI 3
