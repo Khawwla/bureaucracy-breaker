@@ -10,7 +10,6 @@ from google.genai import types
 st.set_page_config(page_title="Bureaucracy Breaker", page_icon="🛡️", layout="wide")
 
 # Custom CSS
-# Custom CSS
 st.markdown("""
 <style>
     /* Make the button look like a primary action */
@@ -28,6 +27,7 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
+
 # Title & Header
 col1, col2 = st.columns([1, 4])
 with col1:
@@ -37,15 +37,12 @@ with col2:
     st.caption(f"Powered by **Gemini 3 Flash Preview** | Status: ONLINE")
 
 # 1. SETUP API
-# Try to get key from Streamlit Secrets (for the judges)
+# Logic: Check Streamlit Secrets first (for deployed app). 
+# If not there, check Sidebar (for local testing).
 if "GEMINI_API_KEY" in st.secrets:
     api_key = st.secrets["GEMINI_API_KEY"]
 else:
-    # If not in secrets, ask the user (for local testing)
     api_key = st.sidebar.text_input("Enter Gemini API Key", type="password")
-    
-# 1. SETUP API
-api_key = st.sidebar.text_input("Enter Gemini API Key", type="password")
 
 # CONFIGURATION FOR GEMINI 3
 # We enable 'include_thoughts' to show the reasoning process
@@ -166,10 +163,7 @@ if api_key:
                     )
                     
                     # Show Thoughts (If Gemini 3 provides them)
-                    # Note: Depending on the exact preview version, thought parts might vary.
-                    # We check if there are candidates with thoughts.
                     try:
-                         # This is a basic check for thoughts in the new SDK
                          if hasattr(response, 'candidates') and response.candidates:
                             for part in response.candidates[0].content.parts:
                                 if hasattr(part, 'thought') and part.thought:
